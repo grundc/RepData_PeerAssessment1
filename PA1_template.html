@@ -124,11 +124,14 @@ $(document).ready(function () {
 <div id="loading-and-preprocessing-the-data" class="section level2">
 <h2>Loading and preprocessing the data</h2>
 <p>For ease of use the data will transformed into a data.table.</p>
-<pre class="r"><code>filename &lt;- &quot;activity.csv&quot;
-DFactivities &lt;- read.csv(filename,stringsAsFactors = F)
+<pre class="r"><code>library(chron)</code></pre>
+<pre><code>## Warning: package 'chron' was built under R version 3.2.5</code></pre>
+<pre class="r"><code>library(ggplot2)
 library(data.table)</code></pre>
 <pre><code>## Warning: package 'data.table' was built under R version 3.2.5</code></pre>
-<pre class="r"><code>DTactivities &lt;- data.table(DFactivities)</code></pre>
+<pre class="r"><code>filename &lt;- &quot;activity.csv&quot;
+DFactivities &lt;- read.csv(filename,stringsAsFactors = F)
+DTactivities &lt;- data.table(DFactivities)</code></pre>
 </div>
 <div id="questions-to-be-addressed" class="section level2">
 <h2>Questions to be addressed</h2>
@@ -149,10 +152,7 @@ hist(stepsPerDay$steps, col=&quot;blue&quot;, main=&quot;Histogram of total step
  1. calculate the mean of steps by interval and store result<br />
  2. transform interval into a time object using library “chron”<br />
  3. set environment timezone to “GMT” to avoid, that R is adding hours.</p>
-<pre class="r"><code>library(chron)</code></pre>
-<pre><code>## Warning: package 'chron' was built under R version 3.2.5</code></pre>
-<pre class="r"><code>library(ggplot2)
-meanPerInterval &lt;- DTactivities[is.na(steps)==F, .(meanSteps=mean(steps) ),by=.(interval)]
+<pre class="r"><code>meanPerInterval &lt;- DTactivities[is.na(steps)==F, .(meanSteps=mean(steps) ),by=.(interval)]
 meanPerInterval[,time:=times(format(strptime(sprintf(&quot;%04d&quot;,interval), format=&quot;%H%M&quot;), format = &quot;%H:%M:00&quot;))]
 Sys.setenv(TZ='GMT')
 g &lt;- ggplot(meanPerInterval, aes(time, meanSteps))

@@ -8,8 +8,15 @@
 For ease of use the data will transformed into a data.table.
 
 ```r
-filename <- "activity.csv"
-DFactivities <- read.csv(filename,stringsAsFactors = F)
+library(chron)
+```
+
+```
+## Warning: package 'chron' was built under R version 3.2.5
+```
+
+```r
+library(ggplot2)
 library(data.table)
 ```
 
@@ -18,6 +25,8 @@ library(data.table)
 ```
 
 ```r
+filename <- "activity.csv"
+DFactivities <- read.csv(filename,stringsAsFactors = F)
 DTactivities <- data.table(DFactivities)
 ```
 
@@ -52,15 +61,6 @@ Prozessing steps:
 
 
 ```r
-library(chron)
-```
-
-```
-## Warning: package 'chron' was built under R version 3.2.5
-```
-
-```r
-library(ggplot2)
 meanPerInterval <- DTactivities[is.na(steps)==F, .(meanSteps=mean(steps) ),by=.(interval)]
 meanPerInterval[,time:=times(format(strptime(sprintf("%04d",interval), format="%H%M"), format = "%H:%M:00"))]
 Sys.setenv(TZ='GMT')

@@ -14,9 +14,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 For ease of use the data will transformed into a data.table.
 ```{r}
+library(chron)
+library(ggplot2)
+library(data.table)
+
 filename <- "activity.csv"
 DFactivities <- read.csv(filename,stringsAsFactors = F)
-library(data.table)
 DTactivities <- data.table(DFactivities)
 ```
 
@@ -48,8 +51,6 @@ Prozessing steps:
  3. set environment timezone to "GMT" to avoid, that R is adding hours. 
 
 ```{r}
-library(chron)
-library(ggplot2)
 meanPerInterval <- DTactivities[is.na(steps)==F, .(meanSteps=mean(steps) ),by=.(interval)]
 meanPerInterval[,time:=times(format(strptime(sprintf("%04d",interval), format="%H%M"), format = "%H:%M:00"))]
 Sys.setenv(TZ='GMT')
